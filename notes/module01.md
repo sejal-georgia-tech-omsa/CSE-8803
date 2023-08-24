@@ -91,3 +91,36 @@
     - Example of bigrams:  
       this is a simple sentence --> "this is", "is a", "a simple", "simple sentence"
 
+- Preprocessing Text Data
+  - text data is a form of unstructured data
+  - text preprocessing is the first step to prepare and clean the text data to perform an NLP task
+  - useful libraries for text preprocessing
+    - `re`: regular expression operations
+    - `nltk`: natural language toolkit
+  - common steps in text preprocessing
+    - noise removal
+    - tokenization
+    - text normalization
+
+- Noise Removal
+  - removes unwanted text formatting information
+    - punctuation and accent marks
+    - special characters
+    - numeric digits or replacing with the word
+    - leading, ending, and vertical whitespace
+    - HTML formatting
+
+- Tokenization
+  - INPUT: "this is a simple sentence"
+  - OUTPUT: "this", "is", "a", "simple", "sentence"
+
+- Text Normalization
+  - **Stemming**: reducing words to their stem, base or root form
+  - **Lemmatization**: similar to stemming, reduces inflectional forms to a common base form: the *lemma*
+    - lemmatization does not simply chop off inflections; instead, it uses lexical knowledge bases to get the correct base forms of words
+    - *slightly more sophisticated / advanced than stemming*
+  - Example
+    - INPUT: "There are several types of stemming algorithms."
+    - OUTPUT:
+      - Stemming: "there are sever type of stem algorithms."
+      - Lemmatization: "There are several type of stemming algorithms."
