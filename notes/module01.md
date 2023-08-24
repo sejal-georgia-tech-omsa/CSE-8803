@@ -73,3 +73,21 @@
 
 ### Lesson 1: Text Preprocessing Techniques
 
+- NLP Terminology
+  - **Corpus**: collection of text
+    - e.g., Yelp Reviews, Wikipedia
+  - **Syntax**: the grammatical structure of the text
+  - **Syntactic parsing**: process of analyzing natural language with grammatical rules
+  - **Semantics**: the meaning of text
+  - **Tokenization**: splitting longer pieces of texts into smaller pieces (tokens)
+    - example of splitting a sentence into words:  
+      this is a simple sentence -> "this" "is" "a" "simple" "sentence"
+  - **Vocabulary**: list of unique words
+  - **Stop words**: commonly used words such as "the", "a", "an", "is", "are"... that don't contrivute a lot to the overall meaning
+  - **N-Grams**: a consecutive sequence of n words (2-5 is common) in a text
+    - 1-gram (unigram)
+    - 2-gram (bigram)
+    - 3-gram (trigram)
+    - Example of bigrams:  
+      this is a simple sentence --> "this is", "is a", "a simple", "simple sentence"
+
