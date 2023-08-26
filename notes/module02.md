@@ -163,3 +163,48 @@
     - TF-IDF does NOT consider the position / order of the words because of creating the document-term matrix
     - other methods such as bag of words also suffers from this issue
 
+-------------
+
+Quiz 0: Knowledge Base
+
+1. Which of the following statements regarding the dot product of two nonzero vectors X and y is correct
+
+> it is zero when X is orthogonal to Y
+
+2. Suppose we have 4 datapoints whose normalized class probabilities are as shown below, which each row represents a datapoint and each column represents a class
+
+```
+probs = [
+  [ 0.3 0.5 0.2 ]
+  [ 0.4 0.3 0.3 ]
+  [ 0.2 0.1 0.7 ]
+  [ 0.1 0.8 0.1 ]
+]
+```
+
+This is an example of "soft" classification, since we obtain the probability of each datapoint belonging to each class. To obtain "hard" classification, which one of the following commands should we use:
+
+*NOTE: the output of hard classification is [1 0 2 1], where the i'th element in the vector represents the class with the highest probability for datapoint 'i'*
+
+> np.max(probs, axis=0)
+
+3. Which of the following cases are not prone to overfitting
+
+> - [x] Using bagging techniques like Random Forest  
+> - [ ] Increase the complexity of the model  
+> - [ ] Reduce the size of data for a given model and keep the number of dimensions the same  
+> - [ ] Apply regularization  
+
+4. X and Y are two discretely distributed random bariables. Which of the following equations are correct?
+
+> - [ ] $p(x) = \sum_x p(x, y)$  
+> - [x] $p(x,y) = p(y|x)p(x)$  
+> - [x] $p(x) = \sum_y p(x, y)$  
+
+5. Given two matrices of A and B, both of them 3x3, which of the following statements are correct for doing matrix multiplication in Python? Select all that apply.
+
+> - [ ] `numpy.dot(A,B)`
+> - [x] `numpy.multiply(A,B)`
+> - [x] `numpy.matmul(A, B)`
+> - [x] `A @ B`
+
