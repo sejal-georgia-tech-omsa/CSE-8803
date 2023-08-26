@@ -135,8 +135,31 @@
   - the number of appearances of a term in a document
   - will be high if terms appear many times in this document
   
-  $tf("this", d_1) = \frac{1}{5} = 0.2$  
-  $tf("this", d_2) = \frac{1}{7} \approx 0.14$
+    $tf("this", d_1) = \frac{1}{5} = 0.2$  
+    $tf("this", d_2) = \frac{1}{7} \approx 0.14$
+
+  - not sufficient on its own because common articles typically appear very frequently but are not extremely important in the context of document meaning
 
 - Inverse Document Frequency (IDF)
-  - 
+  - $IDF = \text{log}(\frac{N}{\text{the number of documents containg that term}})$  
+  $idf("this", D) = \text{log}(\frac{2}{2}) = 0$
+  - common words like "a", "the", and "this" will have a very low IDF in general
+
+- TF-IDF
+  - a word's importance score in a document, among N documents
+  - final score = TF * IDF
+  - higher score --> more characteristic
+
+    $tfidf("this", d_1, D) = 0.2 * 0 = 0$  
+    $tfidf("this", d_2, D) = 0.14 * 0 = 0$
+
+- Advantages and Disadvantages of TF-IDF
+  - Advantages
+    - simple and easy to implement
+    - higher score means "more characteristic"
+    - common words will have very small scores such as "the", "a", "this"
+    - TF-IDF is a good technique to search for documents, find similar documents, or cluster documents
+  - Disadvantages
+    - TF-IDF does NOT consider the position / order of the words because of creating the document-term matrix
+    - other methods such as bag of words also suffers from this issue
+
