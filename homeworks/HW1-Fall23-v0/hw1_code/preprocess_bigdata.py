@@ -26,10 +26,11 @@ class Preprocess:
         Tokenizer: https://huggingface.co/docs/transformers/main_classes/tokenizer
         '''
         #5.1.1
-        self.dataset = load_dataset('wikipedia', "20220301.en", split='train')
+        self.dataset = load_dataset('wikipedia', "20220301.en", split='train', streaming=True)
 
         #5.1.2
-        self.tokenizer = None
+        self.tokenizer = AutoTokenizer.from_pretrained('distilbert-base-cased')
+        
 
     def tokenize(self, batch, max_length=100):
         '''
@@ -50,8 +51,9 @@ class Preprocess:
                          self.dataset.
         '''
         # 5.1.2
-        tokens_dict = None
-        return tokens_dict
+        token_ids = self.tokenizer(batch['text'], max_length=max_length, padding='max_length', truncation=True)['input_ids']
+        tokens = [self.tokenizer.convert_ids_to_tokens(x) for x in token_ids]
+        return {'tokens': tokens}
     
     def preprocess_text(self):
         '''
@@ -64,7 +66,9 @@ class Preprocess:
             dataset_cleaned: Iterable Dataset with the 'id', 'title', and new 'tokens' column added
         '''
         #5.1.3
-        dataset_cleaned = None
+        dataset_cleaned = self.dataset.remove_columns('url')
+        dataset_cleaned = dataset_cleaned.map(lambda x: self.tokenize(x), batched=True)
+        dataset_cleaned = dataset_cleaned.remove_columns('text')
         return dataset_cleaned
     
 
