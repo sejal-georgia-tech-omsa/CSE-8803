@@ -6,7 +6,7 @@ class BagOfWords(object):
 		'''
 		Initialize instance of CountVectorizer in self.vectorizer for use in fit and transform
 		'''
-		raise NotImplementedError
+		self.vectorizer = CountVectorizer()
 
 	def fit(self, data):
 	    '''
@@ -17,7 +17,7 @@ class BagOfWords(object):
 	    Return:
 	        None
 	    '''
-	    raise NotImplementedError
+	    self.vectorizer.fit(data)
 
 	def transform(self, data):
 	    '''
@@ -30,7 +30,7 @@ class BagOfWords(object):
 	        x: (N, D) bag of words numpy array
 	    Hint: .toarray() may be helpful
 	    '''
-	    raise NotImplementedError
+	    return self.vectorizer.transform(data).toarray()
 
 
 class TfIdf(object):
@@ -38,7 +38,7 @@ class TfIdf(object):
 		'''
 		Initialize instance of TfidfVectorizer in self.vectorizer for use in fit and transform
 		'''
-		raise NotImplementedError
+		self.vectorizer = TfidfVectorizer()
 
 
 	def fit(self, data):
@@ -50,7 +50,7 @@ class TfIdf(object):
 	    Return:
 	        None
 	    '''
-	    raise NotImplementedError
+	    self.vectorizer.fit(data)
 
 
 	def transform(self, data):
@@ -65,4 +65,4 @@ class TfIdf(object):
 	    Hint: .toarray() may be helpful
 	    '''
 	    
-	    raise NotImplementedError
+	    return self.vectorizer.transform(data).toarray()

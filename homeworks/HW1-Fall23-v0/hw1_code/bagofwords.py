@@ -9,8 +9,7 @@ class OHE_BOW(object):
 		Initialize instance of OneHotEncoder in self.oh for use in fit and transform
 		'''
 		self.vocab_size = None 			#keep
-
-		raise NotImplementedError
+		self.oh = OneHotEncoder()
 
 	def split_text(self, data):
 		'''
@@ -21,7 +20,8 @@ class OHE_BOW(object):
 		Return:
 			data_split: list of N lists of individual words from each string
 		'''
-		raise NotImplementedError
+		data_split = [sentence.split(' ') if sentence != ' ' else [] for sentence in data]
+		return data_split
 
 	def flatten_list(self, data):
 		'''
@@ -33,7 +33,7 @@ class OHE_BOW(object):
 			data_split: (W,) numpy array of words, 
 				where W is the sum of the number of W_i words in each of the list of words		
 		'''
-		raise NotImplementedError
+		return [word for sentence in data for word in sentence]
 
 	def fit(self, data):
 		'''
@@ -49,7 +49,11 @@ class OHE_BOW(object):
 			None
 		Hint: You may find numpy's reshape function helpful when fitting the encoder
 		'''
-		raise NotImplementedError
+  
+		list_of_words = self.split_text(data)
+		flattened_list = self.flatten_list(list_of_words)
+		self.oh.fit(np.array(flattened_list).reshape(-1, 1))
+		self.vocab_size = len(set(flattened_list))
 
 
 	def onehot(self, words):
@@ -65,7 +69,8 @@ class OHE_BOW(object):
 		Hint: 	.toarray() may be helpful in converting a sparse matrix into a numpy array
 				You can use sklearn's built-in OneHotEncoder transform function
 		'''
-		raise NotImplementedError
+  
+		return self.oh.transform(np.array(words).reshape(-1,1)).toarray()
 
 	def transform(self, data):
 		'''
@@ -84,4 +89,15 @@ class OHE_BOW(object):
 			bow: (N, D) numpy array
 		Hint: Using a try and except block during one hot encoding transform may be helpful
 		'''
-		raise NotImplementedError
+		N = len(data)
+		sentences = self.split_text(data)
+		flattened_list = self.flatten_list(sentences)
+		self.fit(flattened_list)
+		bow = np.zeros(shape=(len(sentences), self.vocab_size))
+		for N, sentence in enumerate(sentences):
+			try:
+				ohe = self.onehot(sentence).sum(axis=0)
+			except:
+				ohe = np.zeros(shape=(1, self.vocab_size))
+			bow[N,:] = ohe
+		return bow

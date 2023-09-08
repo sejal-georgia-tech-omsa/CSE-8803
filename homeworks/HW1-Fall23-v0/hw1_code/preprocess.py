@@ -26,11 +26,24 @@ class Preprocess(object):
 		Return:
 			cleaned_text: string
 		'''
+  
+		# STEP 1: remove HTML formatting
+		cleaned_text = BeautifulSoup(text,'html.parser').get_text()
 
-		# Step 2 is implemented for you
+		# STEPS 2 and 3: remove non-alphabetic characters as well as leading or trailing white spaces
 		cleaned_text = re.sub('^\s+|\W+|[0-9]|\s+$',' ',cleaned_text).strip()
+  
+		# STEP 4: convert to lower case
+		cleaned_text = cleaned_text.lower()
+  
+		# STEP 5: tokenize and remove stopwords using nltk's 'english' vocabulary
+		tokens = nltk.word_tokenize(cleaned_text)
+		stopwords = nltk.corpus.stopwords.words("english")
+		cleaned_tokens = [token for token in tokens if token not in stopwords]
 
-		raise NotImplementedError
+		# STEP 6: rejoin remaining text into one string using " " as the word separator
+		cleaned_text = " ".join(cleaned_tokens) if len(cleaned_tokens) > 0 else "".join(cleaned_tokens)
+		return cleaned_text
 
 	def clean_dataset(self, data):
 		'''
@@ -42,8 +55,8 @@ class Preprocess(object):
 		Return:
 			cleaned_data: list of cleaned N strings
 		'''
-		
-		raise NotImplementedError
+  
+		return [self.clean_text(s) for s in data]
 
 
 def clean_wos(x_train, x_test):
@@ -57,5 +70,6 @@ def clean_wos(x_train, x_test):
 		cleaned_text_wos: list of cleaned N strings
 		cleaned_text_wos_test: list of cleaned M strings
 	'''
-
-	raise NotImplementedError
+ 
+	pp = Preprocess()
+	return pp.clean_dataset(x_train), pp.clean_dataset(x_test)

@@ -1,3 +1,5 @@
+
+from sklearn.model_selection import train_test_split
 def split_data(data, split_ratio = 0.8):
     
     '''
@@ -12,5 +14,5 @@ def split_data(data, split_ratio = 0.8):
 		train: train split of the data
 		test: test split of the data
 	'''
-        
-    raise NotImplementedError
+    train, test = train_test_split(data, test_size=1-split_ratio, shuffle=False)
+    return train, test

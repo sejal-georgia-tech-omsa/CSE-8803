@@ -11,6 +11,6 @@ dependencies:
 - pandas
 - nltk
 - bs4
-- mkl < 2022
+# - mkl < 2022
 - datasets
 - transformers

@@ -16,7 +16,7 @@ class Metrics(object):
 		Return:
 			accuracy: scalar
 		'''
-		raise NotImplementedError
+		return sum(y_hat == y) / len(y)
 
 	def recall(self, y, y_hat, average='macro'):
 		'''
@@ -30,7 +30,7 @@ class Metrics(object):
 		Return:
 			recall: scalar or list of scalars with length of # of unique labels
 		'''
-		raise NotImplementedError
+		return recall_score(y, y_hat, average=average)
 
 	def precision(self, y, y_hat, average='macro'):
 		'''
@@ -44,7 +44,7 @@ class Metrics(object):
 		Return:
 			precision: scalar or list of scalars with length of # of unique labels
 		'''
-		raise NotImplementedError
+		return precision_score(y, y_hat, average=average)
 
 	def f1_score(self, y, y_hat, average='macro'):
 		'''
@@ -58,7 +58,7 @@ class Metrics(object):
 		Return:
 			f1_score: scalar or list of scalars with length of # of unique labels
 		'''
-		raise NotImplementedError
+		return f1_score(y, y_hat, average=average)
 
 	def roc_auc_score(self, y, y_hat, average='macro'):
 		'''
@@ -72,7 +72,7 @@ class Metrics(object):
 		Return:
 			roc_auc_score: scalar or list of scalars with length of # of unique labels
 		'''
-		raise NotImplementedError
+		return roc_auc_score(y, y_hat, average=average)
     
 	def confusion_matrix(self, y, y_hat):
 		'''
@@ -85,4 +85,4 @@ class Metrics(object):
 		Return:
 			confusion_matrix: numpy array of the predictions vs ground truth counts.
 		'''
-		raise NotImplementedError
+		return confusion_matrix(y, y_hat)
