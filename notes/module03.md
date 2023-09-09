@@ -120,6 +120,8 @@ Visualizing Classification Performance using ROC curve (receiver operating chara
   - not necessarily
   - could be bad at detecting the extreme cases
 
+--------------------------
+
 ### Quiz 2
 
 1. The "Bayes" part of the term "Naive Bayes" comes because we use the Bayes decision rule for classification. Where does the "Naive" part come from?
