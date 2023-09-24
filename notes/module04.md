@@ -255,7 +255,57 @@ Practice Quiz
 
 > The length of the vector parameters
 
+14. Why do we use absolute value for the constraint of the support vector machine?
+
+> To make it sign agnostic for two different labels
+
+15. What does it mean if the actual label and predicted label have the same sign?
+
+> The label is predicted correctly
+
+16. Why do we convert the maximization problem of the objective function into a minimization problem?
+
+> To make it easier to optimize
+
+17. What is the main reason for using the dual form of the support vector machine?
+
+> To handle non-linearly separable data
+
+18. What is the main limitation of the perceptron algorithm?
+
+> Linear separability
+
+19.  What does $f(x) = 0$ represent in the perceptron algorithm?
+
+> A correctly classified document
+
+20. What is the purpose of the activation function?
+
+> The activation function is used to determine the decision line based on the fx value. In the case of the perceptron algorithm, the sine function is used as the activation function.
+
 ------------------------------------------
 
 ### Quiz 3
+
+1. WHich of the following is **NOT** a discriminative model?
+
+> Naive Bayes
+
+2. Logistic Regression is a "soft" classification algorithm, while the Perceptron and SVM are "hard" classification algorithms
+
+> True
+
+3. Which of the following statements of SVM is **FALSE**?
+
+> The margin is $\frac{4}{||\theta||}$
+
+4. Which of the following statements is **INCORRECT**?
+
+> Logistic regression is a hard classification algorithm
+
+5. Which one of the statements below is **CORRECT** about the dual form in the SVM model?
+
+> We can use the kernel trick to help SVM handle non-linearly separable data
+
+
 
