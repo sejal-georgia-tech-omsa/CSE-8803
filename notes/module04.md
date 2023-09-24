@@ -141,7 +141,121 @@ On the other side of the hyperplane...
 
 Lagrange Formulation
 
+- minimize $\frac{1}{2}\theta \theta^T$ subject to $y_i(x_i\theta + b) - 1 \geq 0$
+- $\mathcal{L}(\theta, b, \alpha) = \frac{1}{2}\theta \theta^T - \sum_{i=1}^N \alpha_i (y_i(x_i\theta+b)-1)$
+- minimize with respect to $\theta$ and $b$ and maximize with respect to each $\alpha_t \geq 0$
+- $\nabla_{\theta}\mathcal{L}(\theta, b, \alpha) = \theta - \sum_{i=1}^N \alpha_i y_i x_i = 0$
+- $\nabla_b \mathcal{L}(\theta, b, \alpha) = - \sum_{i=1}^N \alpha_i y_i = 0$
+- so we have
+  - $\theta = \sum_{i=1}^N \alpha_i y_i x_i$
+  - $\sum_{i=1}^N \alpha_i y_i = 0$
+- substituting
+  - $\mathcal{L}(\theta, b, \alpha) = \sum_{i=1}^N \alpha_i - \frac{1}{2}\theta \theta^T$
+  - $\mathcal{L}(\theta, b, \alpha) = \sum_{i=1}^N \alpha_i - \frac{1}{2}\sum_{i=1}^N \sum_{i=1}^N y_i y_j \alpha_i \alpha_j x_i x_j^T$
+
+Training
+- $\theta = \sum_{i=1}^N \alpha_i y_i x_i$
+- no need to go over all the data points
+- $\theta = \sum a_i y_i x_i$ for $x_i in SV$
+- and for $b$ pick any support vector and calculate $y_i(x_i \theta + b) = 1$
+
+Testing
+- for a new test point $s$, compute
+- $s\theta + b = \sum \alpha_i y_i x_i s^T + b$ for $x_i in SV$
+- classify $s$ as class 1 if the result is positive, and class 2 otherwise
+
+### Perceptron
+
+Binary Classification
+- given training data $(x_i, y_i)$ for $i = 1, ..., N$ with $x_i \in \mathbb{R}^d$ and $y_i \in \{-1, 1}$, learn a classifier $f(x)$ such that  
+$$f(x_i) \begin{cases}\geq 0 & +1 & \text{non-spam document}\\< 0 & -1 & \text{spam document}\end{cases}$$
+- let $y_i f(x_i) > 0$ for a correct classification
+
+Linear Classifier
+- A linear classifier has the form $f(x) = x\theta + \theta_0$
+- in 2D, the discriminant is a line
+- $\theta$ is the **normal** to the line $\theta_0$ and is the **bias term**
+- $\theta$ is known as the model **parameters** or the **weight vector**
+- in 3D, the discriminant is a plane
+- in N-dimensional space, it is a hyperplane
+
+The Perceptron Classifier
+- considering x is **linearly separable** and $y$ has two labels of $\{-1, 1\}$
+- $f(x_i) = x_i \theta \quad \text{bias is inside } \theta \text{ now}$
+- how can we separate datapoints with label 1 from datapoints with label -1 using a line?
+
+Perceptron Algorithm:
+- initialize $\theta = 0$
+- go through each datapoint $\{x_i, y_i\}$
+  - if $x_i$ is misclassified, then $\theta^{t+1} \leftarrow \theta^T + \alpha y_i x_i$
+- until all datapoints are correctly classified
+
+Advantages and Disadvantages of Perceptron
+- Advantages
+  - Very simple algorithm
+  - It is fast and does not require any parameters
+  - Quick training to optimize parameters
+- Disadvantages
+  - It just works for linearly separable data
+  - It will not provide a unique decision boundary
+
 --------------------------
+
+Practice Quiz
+
+1. What is logistic regression?
+
+> A discriminative model
+
+2. What kind of probability output does logistic regression provide?
+
+> Soft classification
+
+3. What is the sigmoid function used for in logistic regression?
+
+> To convert features into a probabilistic form
+
+4. What is the advantage of a discriminative model like logistic regression?
+
+> The advantage of a discriminative model like logistic regression is that it can calculate posterior probability directly without modeling the underlying prior and likelihood distribution.
+
+5. What is the SVM algorithm commonly called?
+
+> Large margin classifier
+
+6. What are the dual and prime forms of the SVM algorithm used for?
+
+> Optimizing H
+
+7. What is the purpose of the kernel trick in SVM?
+
+> To handle non-linear data
+
+8. What does the perceptron algorithm prioritize?
+
+> Classifying data points correctly
+
+9. Why is maximizing the margin important in SVM?
+
+> To provide stability and robustness
+
+10. What is the goal of SVM?
+
+> To maximize the margin
+
+11. What is the objective function in SVM used to find the model parameters?
+
+> Constructing a linear combination of features
+
+12. What is the role of the bias term in the SVM equation?
+
+> To enforce the linear combination of features
+
+13. What determines the length of the margin in SVM? 
+
+> The length of the vector parameters
+
+------------------------------------------
 
 ### Quiz 3
 
