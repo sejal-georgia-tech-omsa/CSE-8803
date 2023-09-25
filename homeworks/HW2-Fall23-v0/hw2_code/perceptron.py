@@ -10,7 +10,7 @@ class Perceptron(object):
         """
         Initialize instance of OneHotEncoder for use in onehot function.
         """
-        self.oh = OneHotEncoder()
+        self.oh = OneHotEncoder(sparse=False)
 
     def onehot(self, Y):
         """
@@ -63,19 +63,16 @@ class Perceptron(object):
         alpha = 1
         theta = np.zeros((X.shape[1], 1))
         
-        # Update weights at each epoch
+        # STEP 2: iterate over epochs
         for _ in range(epochs):
 
-                # Iterate through each data point and update weights if it is misclassified
-                for i in range(X.shape[0]):
-                        x_i = X[i,:].reshape(-1, 1)
-                        # compute y prediction by taking dot product of x and theta
-                        y_hat = np.dot(x_i.T, theta)
-                        y_hat = -1 if y_hat == 0 else y_hat
-                        # if actual * predicted is less than 0, the datapoint has been misclassified
-                        if y_hat * Y[i] < 0:
-                                theta = theta + (alpha * x_i * Y[i])
-                                
+            # STEP 3: iterate over data points and update theta if misclassified
+            for (x_i, y_i) in zip(X, Y):
+                y_pred = np.dot(theta.T, x_i)[0]
+                y_hat = 1 if y_pred >= 0 else -1                                            
+                if y_i * y_hat < 0:
+                    theta = (theta.T + alpha * y_i * x_i).T
+
         return theta
 
 
