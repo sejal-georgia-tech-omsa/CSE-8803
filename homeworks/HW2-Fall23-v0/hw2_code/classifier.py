@@ -20,7 +20,11 @@ class Classifier(object):
         Return:
                 df: dask dataframe of csv file with columns 'sentiment', 'title', 'text' 
         """
-        raise NotImplementedError
+        
+
+        df = dd.read_csv(filePath)
+        df.columns = ['sentiment', 'title', 'text']
+        return df
 
     def combine_text(self, df):
         """
@@ -33,7 +37,9 @@ class Classifier(object):
                 df: dask dataframe with added 'content' field
         """
 
-        raise NotImplementedError
+        # Create a new column called 'content' by concatenating the 'title' and 'text' columns
+        df['content'] = df['title'] + ' ' + df['text']
+        return df
     
     def preprocess_text(self, text):
         """
@@ -65,7 +71,13 @@ class Classifier(object):
         If your code errors using map, please confirm that you have dask version 2023.5.0 or greater
         """
 
-        raise NotImplementedError
+        # Apply the preprocess_text function to the 'content' field of the Dask DataFrame
+        df['text_processed'] = df['content'].map(self.preprocess_text)
+
+        # Compute the Dask DataFrame and convert it to a Pandas DataFrame
+        df = df.compute()
+
+        return df
 
     def create_features_and_labels(self, df):
         """
@@ -84,8 +96,18 @@ class Classifier(object):
         Hint: Initialize CountVectorizer with "english" stop words and use fit_transform for updating features.
         Use dataframe replace with inplace=True for updating labels.
         """
-        x,y = df["text_processed"], df["sentiment"]
-        raise NotImplementedError
+        x, y = df["text_processed"], df["sentiment"]
+
+        # Initialize CountVectorizer with English stop words
+        vectorizer = CountVectorizer(stop_words='english')
+
+        # Fit the vectorizer to the text_processed field and transform it into a CSR sparse matrix
+        x = vectorizer.fit_transform(x)
+
+        # Replace any sentiment label 1 with 0 and sentiment label 2 with 1 in place
+        y.replace({1: 0, 2: 1}, inplace=True)
+
+        return x, y
 
     def train_test_split_fn(self, x, y):
         """
@@ -114,7 +136,8 @@ class Classifier(object):
                 clf: XGBClassifier with parallel threads
         """        
 
-        raise NotImplementedError
+        clf = XGBClassifier(n_jobs = 16)
+        return clf
 
     def train_XGBoost(self, clf, x_train, y_train):
         """
