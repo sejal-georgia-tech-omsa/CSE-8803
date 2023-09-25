@@ -65,4 +65,33 @@ class Glove(object):
         Hint:
             You may find try/except block useful to deal with word that does not exist in the model
         """
-        raise NotImplementedError
+
+        # Initialize a numpy array to store the transformed features
+        transformed_features = np.zeros((len(data), dimension))
+
+        # Iterate over each sentence
+        for i, sentence in enumerate(data):
+
+            # Initialize a list to store the embeddings for each token in the sentence
+            embeddings = []
+
+            # Iterate over the tokens (words) in the sentence
+            for token in sentence.split():
+                try:
+                    embedding = model[token.lower()]
+                    embeddings.append(embedding)
+                except:
+                    # If the token is not in the glove model, ignore it
+                    pass
+
+            # If there are no embeddings for the sentence, set the embedding to a vector of zeros
+            if len(embeddings) == 0:
+                embedding = np.zeros((1, dimension))
+            else:
+                # Compute the mean of the embeddings for the sentence
+                embedding = np.mean(embeddings, axis=0)
+
+            # Add the mean embedding to the transformed features array
+            transformed_features[i] = embedding
+
+        return transformed_features

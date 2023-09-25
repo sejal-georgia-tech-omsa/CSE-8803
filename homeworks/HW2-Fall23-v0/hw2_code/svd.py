@@ -16,7 +16,9 @@ class SVD(object):
                 S: (min(N,D), ) numpy array
                 V^T: (D,D) numpy array
         """
-        raise NotImplementedError
+
+        U, S, Vh = np.linalg.svd(data, full_matrices=True, compute_uv=True)
+        return U, S, Vh
 
     def rebuild_svd(self, U, S, V, k):
         """
@@ -33,7 +35,14 @@ class SVD(object):
 
         Hint: numpy.matmul may be helpful for reconstruction.
         """
-        raise NotImplementedError
+        
+        # Create a diagonal matrix from the singular values
+        S_diag = np.diag(S[:k])
+
+        # Reconstruct the data
+        data_rebuild = np.matmul(U[:, :k], np.matmul(S_diag, V[:k, :]))
+
+        return data_rebuild
 
     def compression_ratio(self, data, k): 
         """
@@ -46,7 +55,17 @@ class SVD(object):
         Return:
                 compression_ratio: float of proportion of storage used
         """
-        raise NotImplementedError
+        
+        # Calculate the number of stored values in the original data
+        num_stored_values_original = data.shape[0] * data.shape[1]
+
+        # Calculate the number of stored values in the compressed data
+        num_stored_values_compressed = (data.shape[1] * k) + k + (k * data.shape[0])
+        
+        # Calculate the compression ratio
+        compression_ratio = num_stored_values_compressed / float(num_stored_values_original)
+
+        return compression_ratio
 
     def recovered_variance_proportion(self, S, k):  
         """
@@ -59,4 +78,14 @@ class SVD(object):
         Return:
                 recovered_var: float corresponding to proportion of recovered variance
         """
-        raise NotImplementedError
+
+        # Calculate the total variance in the original matrix
+        total_variance = np.sum(S**2)
+
+        # Calculate the variance recovered by the rank-k approximation
+        recovered_variance = np.sum(S[:k]**2)
+
+        # Calculate the proportion of the variance recovered
+        recovered_variance_proportion = recovered_variance / total_variance
+
+        return recovered_variance_proportion

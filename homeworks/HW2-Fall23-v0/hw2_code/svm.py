@@ -7,7 +7,7 @@ class SVM(object):
         Initialize instance of SGDClassifier using SVM for use in fit and predict in self.clf variable.
         Make sure to set the random_seed parameter with the passed in random_seed variable.
         """
-        raise NotImplementedError
+        self.clf = SGDClassifier(random_state=random_seed)
 
     def fit(self, data, labels):
         """
@@ -17,7 +17,7 @@ class SVM(object):
                 data: (N, D) TF-IDF features for the data.
                 labels: (N, ) list of class labels
         """
-        raise NotImplementedError
+        self.clf.fit(data, labels)
 
     def predict(self, data):
         """
@@ -29,4 +29,4 @@ class SVM(object):
         Return:
                 predictedLabels: list of predicted classes for the data.
         """
-        raise NotImplementedError
+        return self.clf.predict(data)
