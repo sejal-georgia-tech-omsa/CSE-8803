@@ -126,35 +126,34 @@ GloVe Word Vectors
 - the model is trained in batches of the training sample with optimizer to minimize the cost function and hence generate word and context vectors for each word
 - each word in the corpus is thus represented by a dense vector of fixed size length
 - the word vectors obtained by GloVe showcase that the meaning was captured in these vector representations through similarity as well as linear structure
-- using Euclidena distance or cosine similarity between word vectors represents the linguistics or semantic similarity of the corresponding words
+- using Euclidean distance or cosine similarity between word vectors represents the linguistics or semantic similarity of the corresponding words
 - the word vectors by Glove conserve linear substructures
 - vector differences capture as much as possible the meaning specified by the two words
 - for example, the underlying concept that differentiates man and woman, meaning gender, may be equivalently specified by other word pairs such as king and queen $w_{\text{man}} - w_{\text{woman}} = w_{\text{king}} - w_{\text{queen}}$
 
-
 ------------------------------------------
 
-### Quiz 3
+Quiz 4
 
-1. WHich of the following is **NOT** a discriminative model?
+1. Which of the following are advantages of GloVe?
 
-> Naive Bayes
+> - [ ] 1. We can use corpus data directly almost without any preprocessing
+> - [x] 2. It uses matrix factorization that can quickly generate different sized vectors
+> - [x] 3. It relies on global statistics of word occurrence
+> - [x] 4. It gives lower weight for highly requent word pairs thus preventing the meaningless stop words
 
-2. Logistic Regression is a "soft" classification algorithm, while the Perceptron and SVM are "hard" classification algorithms
+2. Which of the following statements of GloVe is **TRUE**?
 
-> True
+> GloVe representation captures the linguistics or semantic similarity of the words
 
-3. Which of the following statements of SVM is **FALSE**?
+3. Which of the following statements is **INCORRECT**?
 
-> The margin is $\frac{4}{||\theta||}$
+> The size of co-occurrence matrix decreases with an increase in vocabulary size
 
-4. Which of the following statements is **INCORRECT**?
+4. Which is the following central idea underlying dimensionality reduction for text data?
 
-> Logistic regression is a hard classification algorithm
+> Capturing high variance in the data
 
-5. Which one of the statements below is **CORRECT** about the dual form in the SVM model?
+5. Which of the following statements is **FALSE**?
 
-> We can use the kernel trick to help SVM handle non-linearly separable data
-
-
-
+> Dimensionality reduction can only use linear operations to reduce information loss
