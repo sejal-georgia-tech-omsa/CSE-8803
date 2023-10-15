@@ -102,3 +102,43 @@ CBOW or Skip-Gram Model?
    2. Skip-gram woudl learn that cat and dog are similar
 2. CBOW is trained to predict (maximize the probability) a single word from a fixed window size of context words, while Skip-gram does the opposite and strives to predict several context words from a single input word
 3. CBOW is much faster to train than Skip-gram
+
+--------------------------------------
+
+Quiz 5
+
+1. Which of the following is **INCORRECT** about the backpropagation algorithm?
+
+> - [ ] Training speed can be improved if we use batch gradient descent compared to stochastic gradient descent
+> - [x] It requires prior knowledge about the network
+> - [ ] The parameters are calculated from right to left in the network
+> - [ ] We can use gradient descent for optimization
+
+2. Which of the following statements is **FALSE**?
+
+> - [x] In stochastic gradient descent, the entire dataset is used to compute the forward pass (the activations) and the backward pass (the gradients)
+> - [ ] In a fully connected network, each unit / neuron in layer "l" is connected to every unit / neuron in layer "l-1"
+> - [ ] Adding several hidden layers to the neural network architecture can be counterproductive, since it may lead to overfitting
+> - [ ] None of the above
+
+3. Why do we use an activation function for neural nets?
+
+> - [x] To be able to capture non-lienar relationships or patterns
+> - [ ] Making optimization easier
+> - [ ] To create linear combinations of features
+> - [ ] To make the loss function a convex one
+
+4. Which of the following statements of word2vec is **FALSE**?
+
+> - [x] CBOW learns better semantic information of the words while Skip-gram is better for capturing syntactic information
+> - [ ] CBOW is more efficient to train than Skip-gram
+> - [ ] CBOW predicts a single word from a fixed window size of context words
+> - [ ] Skip-gram predicts several context words from a single input word
+
+5. Which of the following statements is **TRUE**?
+
+> - [ ] One-hot encoding is as efficient as word2vec
+> - [ ] We can use the same one-hot encoding vector when we switch to a different corpus
+> - [ ] The size of the one-hot encoding is equal to the size of the corpus
+> - [x] Word2vec captures contextual information while one-hot encoding does not
+
