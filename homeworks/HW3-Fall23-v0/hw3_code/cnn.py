@@ -26,11 +26,17 @@ class CNN(nn.Module):
         EMBEDDING_SIZE = 500  # Note that this is the embedding dimension in the word2vec model passed in as w2vmodel.wv
         NUM_FILTERS = 10      # Number of filters in CNN
 
-        raise NotImplementedError 
+        # initialize embedding layer
+        self.embedding = nn.Embedding.from_pretrained(torch.FloatTensor(weights.vectors), freeze=False)
 
-        self.embedding = # initialize embedding layer
-        self.convs = # initialize convolution layers
-        self.fc = # initialize linear layer
+        # initialize convolution layers
+        self.convs = nn.ModuleList([
+            nn.Conv2d(in_channels=1, out_channels=NUM_FILTERS, kernel_size=(window_size, EMBEDDING_SIZE), padding=(window_size - 1, 0))
+            for window_size in window_sizes
+        ])
+
+        # initialize linear layer
+        self.fc = nn.Linear(in_features=NUM_FILTERS * len(window_sizes), out_features=num_classes)
 
     def forward(self, x):
         '''
@@ -50,7 +56,18 @@ class CNN(nn.Module):
         Returns:
             output: Logits of each label. A tensor of size (B, C) where B = batch size and C = num_classes
         '''
-        raise NotImplementedError
+        
+
+        # STEP 1: Feed the input through the embedding layer
+        embedded = self.forward_embed(x)
+        
+        # STEP 2: feed the result through the convolution layers
+        convolution_output = self.forward_convs(embedded).flatten(start_dim=1)
+        
+        # STEP 3: feed the output from convolution through an FC layer to get the logits
+        logits = self.fc(convolution_output)
+        
+        return logits
 
     def forward_embed(self, x):
         '''
@@ -63,7 +80,8 @@ class CNN(nn.Module):
             embeddings : A (B, T, E) tensor containing the embeddings corresponding to the input sequences, where E = embedding size.
 
         '''
-        raise NotImplementedError
+        embeddings = self.embedding(x)
+        return embeddings
 
     def forward_convs(self, embed):
         '''
@@ -77,6 +95,18 @@ class CNN(nn.Module):
         NOTE: Modify the output of the embedding layer accordingly for the convolutions.
         You may need to use pytorch's squeeze and unsqueeze function to reshape some of the tensors before and after convolving.
         '''
-        raise NotImplementedError
+        
+         # Reshape the embedding tensor to (B, 1, T, E)
+        embedded = embed.unsqueeze(1)
 
+        # Feed embedding tensor through convolutional layer using tanh
+        conved_embeddings = [F.tanh(conv(embedded)).squeeze(3) for conv in self.convs]
+        
+        # Feed embedding tensor through convolutional layer using max_pool1d
+        max_pooled = [F.max_pool1d(conv, conv.size(2)) for conv in conved_embeddings]
+
+        # Concatenate the outputs of the convolutional layers
+        output = torch.cat(max_pooled, dim=2)
+
+        return output
 

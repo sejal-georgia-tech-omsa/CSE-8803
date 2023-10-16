@@ -92,14 +92,12 @@ class Word2Vec(object):
         for sentence in tokenized_data:
             for i, word in enumerate(sentence):
                 middle_word_idx = self.word2idx[word]
-                for j in range(i-window_size, i+window_size):
-                    if j >= 0 and j < len(sentence) and j != 0:
+                for j in range(i-window_size, i+window_size+1):
+                    if j >= 0 and j < len(sentence) and j != i:
                         context_word_idx = self.word2idx[sentence[j]]
-                        source_tokens.append(middle_word_idx)
-                        target_tokens.append(context_word_idx) 
+                        source_tokens.append([middle_word_idx])
+                        target_tokens.append([context_word_idx]) 
 
-        print('source tokens', source_tokens)
-        print('target tokens', target_tokens)
         return source_tokens, target_tokens
                     
 
@@ -161,13 +159,11 @@ class SkipGram_Model(nn.Module):
         self.EMBED_DIMENSION = 300 # please use this to set embedding_dim in embedding layer
         self.EMBED_MAX_NORM = 1    # please use this to set max_norm in embedding layer
 
-        raise NotImplementedError
-
         # initialize embedding layer
-        self.embeddings = None
+        self.embeddings = nn.Embedding(vocab_size, self.EMBED_DIMENSION, self.EMBED_MAX_NORM)
 
         # initialize linear layer
-        self.linear = None
+        self.linear = nn.Linear(self.EMBED_DIMENSION, vocab_size)
 
     def forward(self, inputs):
         """
@@ -182,7 +178,14 @@ class SkipGram_Model(nn.Module):
         Hint:
             No need to have a softmax layer here.
         """
-        raise NotImplementedError
+        
+        # Get the word embedding for the center word.
+        center_word_embedding = self.embeddings(inputs)
+
+        # Pass the word embedding to the linear layer to get a prediction for the context word.
+        output = self.linear(center_word_embedding)
+
+        return output
 
 
 class CBOW_Model(nn.Module):
@@ -202,13 +205,11 @@ class CBOW_Model(nn.Module):
         self.EMBED_DIMENSION = 300  # please use this to set embedding_dim in embedding layer
         self.EMBED_MAX_NORM = 1     # please use this to set max_norm in embedding layer
 
-        raise NotImplementedError
-
         # initialize embedding layer
-        self.embeddings = None
+        self.embeddings = nn.Embedding(vocab_size, self.EMBED_DIMENSION, self.EMBED_MAX_NORM)
 
         # initialize linear layer
-        self.linear = None
+        self.linear = nn.Linear(self.EMBED_DIMENSION, vocab_size)
 
     def forward(self, inputs):
         """
@@ -224,4 +225,14 @@ class CBOW_Model(nn.Module):
             The keepdim parameter may be helpful if using torch.mean
             No need to have a softmax layer here. 
         """
-        raise NotImplementedError
+        
+        # embed the input IDs
+        embeddings = self.embeddings(inputs)
+
+        # calculate the average embedding of the context words
+        avg_embedding = torch.mean(embeddings, dim=0, keepdim=True)
+
+        # pass the average embedding through the linear layer
+        logits = self.linear(avg_embedding)
+
+        return logits
