@@ -160,7 +160,7 @@ class SkipGram_Model(nn.Module):
         self.EMBED_MAX_NORM = 1    # please use this to set max_norm in embedding layer
 
         # initialize embedding layer
-        self.embeddings = nn.Embedding(vocab_size, self.EMBED_DIMENSION, self.EMBED_MAX_NORM)
+        self.embeddings = nn.Embedding(vocab_size, self.EMBED_DIMENSION, max_norm=self.EMBED_MAX_NORM)
 
         # initialize linear layer
         self.linear = nn.Linear(self.EMBED_DIMENSION, vocab_size)
@@ -206,7 +206,7 @@ class CBOW_Model(nn.Module):
         self.EMBED_MAX_NORM = 1     # please use this to set max_norm in embedding layer
 
         # initialize embedding layer
-        self.embeddings = nn.Embedding(vocab_size, self.EMBED_DIMENSION, self.EMBED_MAX_NORM)
+        self.embeddings = nn.Embedding(vocab_size, self.EMBED_DIMENSION, max_norm=self.EMBED_MAX_NORM)
 
         # initialize linear layer
         self.linear = nn.Linear(self.EMBED_DIMENSION, vocab_size)

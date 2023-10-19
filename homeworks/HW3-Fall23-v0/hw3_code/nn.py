@@ -16,7 +16,14 @@ class NN(nn.Module):
             num_classes: Number of classes (labels)        
         '''
         super(NN, self).__init__()
-        raise NotImplementedError
+
+        # Initialize two linear layers
+        self.linear1 = nn.Linear(feat_size, 128)
+        self.linear2 = nn.Linear(128, num_classes)
+
+        # Create additional layers
+        self.relu = nn.ReLU()
+        self.dropout = nn.Dropout(0.5)
 
 
     def forward(self, x):
@@ -30,4 +37,13 @@ class NN(nn.Module):
             output: (B, C) tensor of logits where B = batch size and C = num_classes
 
         '''
-        raise NotImplementedError
+        # Pass the input through the first linear layer
+        x = self.linear1(x)
+
+        # Apply non-linearity and dropout
+        x = self.relu(x)
+        x = self.dropout(x)
+
+        # Pass the input through the second linear layer
+        output = self.linear2(x)
+        return output
