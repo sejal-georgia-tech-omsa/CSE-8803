@@ -37,13 +37,9 @@ class NN(nn.Module):
             output: (B, C) tensor of logits where B = batch size and C = num_classes
 
         '''
-        # Pass the input through the first linear layer
+        # Feed the input x through the model
         x = self.linear1(x)
-
-        # Apply non-linearity and dropout
         x = self.relu(x)
         x = self.dropout(x)
-
-        # Pass the input through the second linear layer
-        output = self.linear2(x)
-        return output
+        x = self.linear2(x)
+        return x
