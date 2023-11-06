@@ -1,160 +1,76 @@
-# Module 7
+# Module 8
 
 ## Topic 1
 
-### Lesson 1: Deep Learning CNN
+### Lesson 1: Deep Learning LSTM (Part 1)
 
-Deep Learning
-- deep neural networks learn hierarchical feature representations
+A Long-Term Dependency Example
+- Fill in the blank model:
+  - I was born in Japan and lived there for ten years, and then moved to the U.S. My native language is _____
+    - RNN could suffer from a short memory issue in this example because of the vanishing gradient issue because of long dependencies between words to fill in the blank
 
-Smaller Network: ANN
-- we know it is good to learn a small model
-- from this fully connected model, do we really need all the edges?
-- can some of these be shared?
-- when it comes to images, some patterns are much smaller than the whole image
-  - can represent a small region (like the beak of a bird) with fewer parameters
+Gated cell: Long Short-Term Memory (LSTM)
+- the main concept is to add a "gate" to an RNN unit to control what information is passed through the network
+- LSTM essentially augments the RNN unit by creating gates that allow some information to be passed on through the networka nd some to be forgotten
+  - **LSTM is the leading algorithm used in sequential modeling**
 
-Why CNN works well for images
-- we can train a lot of "small" detectors and each detector must "move around"?
+How LSTM can control information removal and addition for cell state?
+- This is called "gate" (the sigmoid operator) and controls how much information goes through
+- The sigmoid layer scales numbers between zero and one
+- A value of zero means do not let anything through (removal) and one means let all the information through (addition)
 
-Can we use CNN for NLP?
-- yes, but we do need to prepare a dataset which is readable to a CNN model like an image which is a matrix
+## Lesson 2: Deep Learning LSTM (Part 2)
 
-How to prepare the dataset for an NLP problem?
-- Let's say we have 3 documents collected from emails:
-  - Wafa and Mahdi teach NLP class
-  - NLP is neat
-  - CNN is a good model
-- Our vocabulary vector has 12 unique or distinct words; i.e. wafa, and, madhi, ...
-- The longest document has 6 words (NOTE that CNN needs all datapoints to have the same size)
+Forget Gate Layer
+- $f_t = \text{sigmoid}(x_t \theta^{\{input_f\}} + h_{t-1}\theta^{\{hidden_f\}} + b_f)$
+  - OR
+- $f_t = \sigma{sigmoid}(x_t \theta^{\{input_f\}} + h_{t-1}\theta^{\{hidden_f\}} + b_f)$
+- $f_t$: forget gate's activation vector
+- $\theta^{\{input}\}$: similar to RNN; the input matrix parameter has a size $dxm$
+- $\theta^{\{hidden\}}$: similar to RNN, the hidden layer matrix parameter has a size $mxm$
 
-Applying One-Hot Encoding
-- wafa = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-- and = [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-- mahdi = [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-- ...
-- each unique word will be a vector with a length equal to 12
-- there are 12 unique words in our vocabulary vector
+Input Gate Layer to Update Cell State
+- $i_t = \sigma(x_t \theta^{input_i} + h_{t-1}\theta^{\{hidden_i\}} + b_i)$
+  - $i_t$: input / update gate's activation vector
+- $\hat {C_t} = tanh(x_t \theta^{input_{\hat C}} + h_{t-1}\theta^{\{hidden_{\hat C}} + b_{\hat C})$
+  - $\hat {C_t}: cell input activation vector$
 
-Convering Documents into a Matrix
-- stack all of the one-hot encoding vectors till you have an n x d matrix where n is the number of words in the **longest** document and d is the number of unique words in the vocabulary
-- all documents have the same size as the longest document in the corpus
-- this is achieved by zero padding
-- all documents can be converted the same way
+Calculating the Output ($h_t$) Based on New $C_t$
+- $o_t = \sigma(x_t \theta^{\{input_o\}} + h_{t-1}\theta^{\{hidden_o\}} + b_o)$
+  - $o_t$: output gate's activation vector
+- $h_t = o_t * tanh(C_t)$
+  - $h_t$: hidden state vector also known as output vector of the LSTM unit
 
-### Lesson 2: Deep Learning CNN
-
-Important Concept: A Convolutional Layer
-- Now that all documents have the same size and are converted into a matrix form; we can start feeding them into a CNN model
-- A CNN is a neural network with some convolutional layers (and some other layers)
-- A convolutional layer has several filters that do the convolutional operation
-
-Convolution vs Fully Connected
-- CNN has fewer parameters!
-- Shared weights
-
-Max Pooling
-- each filter is a channel
-- the number of channels is the number of filters
-
-Example
-- original: 6x6
-- convolutional layer: 4x4
-  - feature engineering approach: creates richer input containing more information
-- max pooling: 2x2
-- flatten convoluted data and feed into fully connected feed forward network
-
-Another Example:
-- orig:  1 x 24 x 20
-- conv: 25 x 22 x 18
-- maxp: 25 x 11 x 9
-- conv: 50 x  9 x  7
-- maxp: 50 x  4 x  3
-- flattened: 600
-
-A CNN Compresses a Fully Connected Network in 3 Ways:
-1. Reducing the number of connections
-2. Shared weights on the edges
-3. Max pooling further reduces the complexity
-
-Example:
-- `input_shape = (24, 20, 1)`: 24 x 20 matrix, 1 channel
-- `Model2.add(Convolution2D(25, 3, 3))`: there are 25 3x3 filters
+GRU Update and Reset Gates
+- **Update Gate**: the update gates acts similar to the forget and input gate of an LSTM. It decides what information to throw away and what new information to add
+- **Reset Gate**: the reset gate is another gate that is used to decide how much past information to forget
 
 ## Topic 2
 
-### Lesson 1: Deep Learning RNN
+### Lesson 1: Deep Learning LSTM + Attention
 
-Named Entity Recognition (NER) using RNN
-- Example document: Mahdi and Wafa teach NLP
-- Our simple NER model will detect whether each word is referring to a person or not. In our example, 1 refers to a person and 0, not a person
-  | Mahdi | and | Wafa | teach | NLP |
-  | --- | --- | --- | --- | --- |
-  | 1 | 0 | 1 | 0 | 0 |
-- For NER, the location of each word in a sentence is very important
+Language Translation Example
+- *Let's say we are going to translate "How are you" from English to Polish:*
+  - English: How are you
+  - Polish: jak się maz
+- Use LSTM units to perform this task
 
-Encode Each Word into a Vector
-- we can use an encoding method to convert words into a vector (Word2Vec, GloVe, One-hot encoding, ...)
-- Mahdi and Wafa Teach NLP >> each word $(x)$ will be a $d$ dimensional vector: $x \in \mathbb{R}^d$
-- Output or prediction will be a neuron $O \in \mathbb{R}^m$
-- the size of $y$ depends on our desired output
-- for our NER problem, $y$ will be a scalar
-- model parameters or weights $\theta_{dxm}$ ($d$: size of each vectorized word and $m$: number of hidden neurons)
-- for each neuron ($x_i$), we have $m$ parameters
+RNN and LSTM Units
+- LSTM essentially augments the RNN unit by creating gates that allow some information to be passed on through the network and some to be forgotten
+- RNN unit: `tf.keras.layers.SimpleRNN(rnn_units)`
+- LSTM unit: `tf.keras.layers.LSTM(lstm_units)`
 
-### Lesson 2: Deep Learning RNN
+Encoder and Decoder
+![encoder](./../lectures/module08/encoderdecoder.png)
+- $C_i$: encoder state
+- $C$: final eencoder state which is sent to a decoder
+- $S_i$: decoder state
 
-Let's go back to our NER problem using a Feed-Forward Approach
-- $m$: number of hidden neurons is a **hyper-parameter** and needs to be optimized
-- there are two sets of different parameters
-  - (1) input to hidden layers: $\theta^1_{dxm}$
-  - (2) hidden layers to output: $\theta^2_{mxy}$
+Attention Mechanism
+- attention parameters are attached to each encoder LSTM units
+- we need to know the weights associated with each attention
 
-RNN Concept to Connect Different Time Steps
-- We introduced a new set of parameters ($\theta_{mxm}^3$) which generates a new vector of hidden neurons ($h_t$) with size $m$
 
-Simple Representation of RNN
-- rnn_units
-- `tf.keras.layers.SimpleRNN(rnn_units)`
-
-Forward Pass: How to Calculate Past Memory (h) in RNN
-
-![rnn unit](./../lectures/module07/rnn_unit.png)
-
-- $\theta^{(1)}$: weight (parameter) matrix associated with input data
-- $\theta^{(2)}$: weight (parameter) matrix associated with output data
-- $\theta^{(3)}$: weight (parameter) matrix associated with hidden state
-- $h_t = f(x_t, h_{t-1}, \theta)$
-  - $f$: activation function such as $tanh$ (hyperbolic tangent)
-  - $x_t$: input
-  - $h_{t-1}$: past memory (previous step)
-  - $\theta$: model parameters (weight)
-$h_t = \text{tanh}(x_t \theta^{(1)} + h_{t-1} \theta^{(3)} + b)$
-    - each term will be a vector of size $m$
-    - $b$ representes the bias vector here
-- total number of parameters learned by model is $dxm + mxy + mxm$
-
-Forward Pass: How to Calculate Output for Each Step ($\hat y$) in RNN:
-- $\hat{y_t} = \text{softmax}(h_t \theta^{(2)})$
-  - softmax scales the output between 0 and 1
-  - the output of $h_t\theta^{(2)}$ will be a scalar for our NER problem
-
-The complementary step to forward pass is backpropagation (Backproppagation through time (BPTT))
-
-Different RNN Models
-- **One-to-Many**: text generation; image captioning
-- **Many-to-One**: sentiment classification
-- **Many-to-Many**: part of speech tagging (POS), NER, translation, forecasting
-
-Some Problems with RNN
-- forward pass, backpropagation and repeated gradient computation can lead to two major issues
-- **Exploding gradient** (high gradient values leading to very different weights in every optimization iteration)
-  - Solution: gradient clipping (clip a gradient when it goes higher than a threshold)
-- **Vanishing gradient** (low gradient values that stall the model from optimizing the parameters)
-  - Solution: ReLu activation function
-  - LSTM, GRUs (different architectures)
-  - better weight initialization
-- RNN suffers from short-term memory for a long sentence where words of interest may be palced far frome ach other in a sentence (vanishing gradient). Other architectures such as LSTM and GRUs can help with this
 
 --------------------------------------
 
