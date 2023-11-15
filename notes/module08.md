@@ -21,6 +21,17 @@ How LSTM can control information removal and addition for cell state?
 
 ## Lesson 2: Deep Learning LSTM (Part 2)
 
+GRU vs LSTM
+- LSTM
+  - forget state
+  - input gate
+  - output gate
+  - cell state
+- GRU
+  - reset gate
+  - update gate
+
+
 Forget Gate Layer
 - $f_t = \text{sigmoid}(x_t \theta^{\{input_f\}} + h_{t-1}\theta^{\{hidden_f\}} + b_f)$
   - OR
@@ -70,29 +81,30 @@ Attention Mechanism
 - attention parameters are attached to each encoder LSTM units
 - we need to know the weights associated with each attention
 
-
-
 --------------------------------------
 
-### Quiz 6
+### Quiz 7
 
-1. When we are using CNN for NLP, which of the following statements is **FALSE**?
+1. Which of the following statements is true about Long Short-Term Memory (LSTM)?
 
-> The input matrices of the CNN could be of different shapes.
+> LSTM networks are specifically designed to avoid the long-term dependency problem, which is the issue of learning to connect information with a gap between relevant information and the point where it is needed
 
-2. Which of the following statements is **TRUE** about Convolutional Neural Networks (CNNs)?
+2. In LSTM, the new cell state vector is NOT affected by
 
-> CNNs are typically used in tasks that require recognizing patterns in spatial data, like image and video analysis.
+> output gate
 
-3. Which one of the following does **NOT** help to reduce the number of parameters in the Convolutional Neural Network?
+3. How many gates are present in an LSTM architecture?
 
-> Sigmoid Activation function
+> 2
 
-4. Which of the following is **TRUE**?
+4. Which of the following major gates are presentin GRU?
 
-> Exploding gradient problem is solved using gradient clipping (clip a gradient if it goes higher than a threshold)
+> Reset Gate, Update Gate
 
-5. Which of the following statements is **TRUE** about recurrent neural networks (RNNs)?
+5. What is the main disadvantage of not using Attention in encoder-decoder architecture?
 
-> RNNs are particularly suited for sequence prediction tasks because they have "memory" to capture information about what has been calculated before.
+> - [x] Information Loss due to a single vector representation from the encoder
+> - [ ] Information Loss due to a single vector representation from the decoder
+> - [x] Deciphering complexity on the decoder side
+> - [ ] Deciphering complexity on the encoder side
 
