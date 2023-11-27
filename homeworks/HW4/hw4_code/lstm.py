@@ -27,17 +27,15 @@ class LSTM(nn.Module):
         """
         super(LSTM, self).__init__()
         
-        raise NotImplementedError
-        
         self.embed_len = 50
         self.hidden_dim = 75
         self.n_layers = 1
         self.p = 0.5 # default value of dropout rate
 
-        self.embedding_layer = None # remove None and initialize the embedding layer
-        self.lstm = None # remove None and initialize the LSTM layer
-        self.linear = None # remove None and initialize the LSTM layer
-        self.dropout = None # remove None and initialize the LSTM layer
+        self.embedding_layer = nn.Embedding(len(vocab), self.embed_len)
+        self.lstm = nn.LSTM(self.embed_len, self.hidden_dim, num_layers=self.n_layers, bidirectional=True)
+        self.linear = nn.Linear(self.hidden_dim * 2, num_classes)
+        self.dropout = nn.Dropout(self.p)
 
     def forward(self, inputs, inputs_len):
         """
@@ -57,5 +55,11 @@ class LSTM(nn.Module):
             3. For LSTM outputs refer to this documentation: https://pytorch.org/docs/stable/generated/torch.nn.LSTM.html.
                 (This might be helpful in correctly computing the input to the Linear layer)
         """
-        raise NotImplementedError
 
+        embedded = self.embedding_layer(inputs)
+        packed_embedded = pack_padded_sequence(embedded, inputs_len, batch_first=True, enforce_sorted=False)
+        _, (hidden, _) = self.lstm(packed_embedded)
+        hidden = torch.cat((hidden[0], hidden[1]), dim=1)  
+        hidden = self.dropout(hidden)
+        output = self.linear(hidden)
+        return output

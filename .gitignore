@@ -1,2 +1,4 @@
 .DS_Store
 homeworks/HW2-Fall23-v0/hw2_code/data
+*/__pycache__/
+*__pycache__/

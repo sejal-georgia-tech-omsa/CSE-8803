@@ -18,7 +18,7 @@ class LDA:
             output: Tokenized list of sentences. List of N lists of tokens.
         '''
     	
-        raise NotImplementedError
+        return [gensim.utils.simple_preprocess(x) for x in inputs]
 
     def remove_stopwords(self, inputs, stop_words):
         """
@@ -32,7 +32,7 @@ class LDA:
           output: Filtered tokenized list of sentences. List of N lists of tokens with stop words removed.
         """
 
-        raise NotImplementedError
+        return [[token for token in x if token not in stop_words] for x in inputs]
 
     def create_dictionary(self, inputs):
         """
@@ -46,7 +46,10 @@ class LDA:
             corpus: Term document frequency for each word. List of N lists of tuples.
         """
 
-        raise NotImplementedError
+        id2word = gensim.corpora.Dictionary(inputs)
+        corpus = [id2word.doc2bow(text) for text in inputs]
+
+        return id2word, corpus
 
     def build_LDAModel(self, id2word, corpus, num_topics=10):
         """
@@ -61,4 +64,5 @@ class LDA:
           lda_model: LdaMulticore instance.
         """
 
-        raise NotImplementedError
+        lda_model = gensim.models.LdaMulticore(corpus=corpus, id2word=id2word, num_topics=num_topics)
+        return lda_model

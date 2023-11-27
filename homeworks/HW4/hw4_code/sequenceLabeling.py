@@ -18,11 +18,10 @@ class SequenceLabeling(nn.Module):
 
         """
         super(SequenceLabeling, self).__init__()
-        raise NotImplementedError
 
-        self.bert = None # remove None and initialize BERT
-        self.dropout = None # remove None and initialize the Dropout layer
-        self.linear = None # remove None and initialize the Linear layer
+        self.bert = BertModel.from_pretrained('bert-base-uncased')
+        self.dropout = nn.Dropout(0.1)
+        self.linear = nn.Linear(768, num_classes)
 
     def forward(self, inputs, mask, token_type_ids):
         """
@@ -37,4 +36,10 @@ class SequenceLabeling(nn.Module):
         Returns:
             output: Logits of each label. (B, L, C) tensor of logits where C is number of classes.
         """
-        raise NotImplementedError
+
+        outputs = self.bert(inputs, attention_mask=mask, token_type_ids=token_type_ids)
+        last_hidden_state = outputs.last_hidden_state
+        dropout_output = self.dropout(last_hidden_state)
+        logits = self.linear(dropout_output)
+
+        return logits

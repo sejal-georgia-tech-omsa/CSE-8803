@@ -27,19 +27,17 @@ class Attention(nn.Module):
               2. Adding a dropout layer would be useful
         """
         super(Attention, self).__init__()
-        
-        raise NotImplementedError
 
         self.embed_len = 50
         self.hidden_dim = 75
         self.n_layers = 1
         self.p = 0.5
 
-        self.embedding_layer = None # remove None and initialize the embedding layer
-        self.lstm = None # remove None and initialize the LSTM layer
-        self.linear = None # remove None and initialize the Linear layer
-        self.dropout = None # remove None and initialize the Dropout layer
-        self.context_layer = None # remove None and initialize the Context layer
+        self.embedding_layer = nn.Embedding(len(vocab), self.embed_len)
+        self.lstm = nn.LSTM(self.embed_len, self.hidden_dim, num_layers=self.n_layers, bidirectional=True)
+        self.linear = nn.Linear(self.hidden_dim * 2, num_classes)
+        self.dropout = nn.Dropout(self.p)
+        self.context_layer = nn.Linear(self.hidden_dim * 4, self.hidden_dim * 2)
 
     def forward(self, inputs, inputs_len):
         """
@@ -61,7 +59,20 @@ class Attention(nn.Module):
         Returns:
             output: Logits of each label. A tensor of size (B, C) where B = batch size and C = num_classes
         """
-        raise NotImplementedError
+        
+        # Step 1: Obtain lstm output and lstm final hidden state
+        lstm_output, hidden_concat, = self.forward_lstm(inputs, inputs_len)
+
+        # Step 2: Compute normalized attention weights
+        attention_weights = self.forward_attention(lstm_output, hidden_concat)
+
+        # Step 3: Compute context vector, concatenate with final hidden state and pass it through the context layer
+        context_vector = self.forward_context(lstm_output, attention_weights, hidden_concat)
+
+        # Step 4: Pass the output from step 3 through the linear layer
+        output = self.linear(self.dropout(context_vector))
+
+        return output
         
 
     
@@ -81,7 +92,14 @@ class Attention(nn.Module):
         HINT: For packing and padding sequences, consider using : torch.nn.utils.rnn.pack_padded_sequence and torch.nn.utils.rnn.pad_packed_sequence. Set 'batch_first' = True and enforce_sorted = False (for packing)
         
         """
-        raise NotImplementedError
+        
+        # Generally the same forward implementation from lstm.py
+        embedded = self.embedding_layer(inputs)
+        packed_embedded = pack_padded_sequence(embedded, inputs_len, batch_first=True, enforce_sorted=False)
+        lstm_out, (hidden, _) = self.lstm(packed_embedded)
+        lstm_out, _ = pad_packed_sequence(lstm_out, batch_first=True)
+        hidden_concat = torch.cat((hidden[0], hidden[1]), dim=1)  
+        return lstm_out, hidden_concat
 
     
     def forward_attention(self, lstm_output, hidden_concat):
@@ -97,7 +115,14 @@ class Attention(nn.Module):
             attention_weights : A (N, L') tensor containing the normalized attention weights.
         
         """
-        raise NotImplementedError
+        
+        # Compute unnormalized attention scores
+        unnormalized_scores = torch.bmm(lstm_output, hidden_concat.unsqueeze(2)).squeeze(2)
+
+        # Apply softmax to obtain normalized attention weights
+        attention_weights = torch.nn.functional.softmax(unnormalized_scores, dim=1)
+
+        return attention_weights
     
     def forward_context(self, lstm_output, attn_weights, hidden_concat):
         """
@@ -114,7 +139,18 @@ class Attention(nn.Module):
 
         HINT: torch.bmm may be helpful in computing the context.
         """
-        raise NotImplementedError
+
+        # Compute context vector using attention weights and LSTM output
+        context = torch.bmm(attn_weights.unsqueeze(1), lstm_output).squeeze(1)
+
+        # Concatenate context with hidden_concat
+        concatenated = torch.cat((context, hidden_concat), dim=1)
+
+        # Pass through the context layer followed by Tanh activation
+        context_output = torch.tanh(self.context_layer(concatenated))
+
+        return context_output
+
 
 
 
